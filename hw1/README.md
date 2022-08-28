@@ -1,6 +1,6 @@
 ## Homework 1
 
-> _ **Submission**: Sept 4, 2022_
+> _**Submission**: Sept 4, 2022_
 
 ### Usage
 
