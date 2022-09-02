@@ -1,3 +1,4 @@
 takeAlternate n [] = []
-takeAlternate 0 (x:xs) = []
+takeAlternate 1 (x:xs) = [x]
+takeAlternate n [x] = [x]
 takeAlternate n (x:y:xs) = (x : (takeAlternate (n-1) xs))
