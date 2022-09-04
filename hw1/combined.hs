@@ -1,4 +1,3 @@
--- Submission by: Gurbaaz Singh Nandra | 190349 | gurbaaz@iitk.ac.in
 -- Question 1
 takeAlternate :: (Eq t, Num t) => t -> [a] -> [a]
 takeAlternate n [] = []
@@ -14,10 +13,8 @@ last' (x:xs) = last' xs
 merge :: Ord a => [a] -> [a] -> [a]
 merge x y = remove_duplicate (merge' x y) where
   remove_duplicate [] = []
-  remove_duplicate [x] = [x]
-  remove_duplicate (x:y:xs) = if x == y 
-                              then remove_duplicate (x : xs)
-                              else x : (remove_duplicate (y : xs)) 
+  remove_duplicate (x:xs) = x : remove_duplicate(filter (/= x) xs)
+  
   merge' [] [] = []
   merge' (x:xs) [] = (x:xs)
   merge' [] (y:ys) = (y:ys)
