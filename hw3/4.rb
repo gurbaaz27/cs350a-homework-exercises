@@ -56,7 +56,7 @@ class HTMLOutputter < BasicOutputter
     end
     printf "<h%d>%s</h%d>\n", level,@line[i..-2],level
   end
-  
+
   def reset_context
     case @context
     when Context::LIST
@@ -144,7 +144,9 @@ class LaTeXOutputter < BasicOutputter
   end
 
   def list
-    printf "\\item %s", @line[2..-1]
+    printf "\\item "
+    @line=@line[2..-1]
+    process
   end
   
   def heading
@@ -172,13 +174,20 @@ class LaTeXOutputter < BasicOutputter
     printf "%s{%s}\\\\\n", header,@line.chomp[i..]
   end
   
+  def reset_bold_em
+    @bold_beginning=true
+    @emphasis_beginning=true
+  end
+  
   def reset_context
     case @context
     when Context::LIST
-      puts "\n\\end{itemize}\n"
+      puts "\\end{itemize}"
+      @list_beginning = true
     when Context::PARAGRAPH
       @para_beginning = true 
     end
+    @context = Context::NONE
   end
 
   def process
@@ -202,6 +211,7 @@ class LaTeXOutputter < BasicOutputter
         putc c
       end
     end
+    reset_bold_em
   end
   
   def paragraph
@@ -216,7 +226,6 @@ class LaTeXOutputter < BasicOutputter
     File.readlines(@filename).each do |text_line|
       if text_line.strip.empty?
         reset_context
-        @context = Context::NONE
         next
       end
       @line = text_line
@@ -225,13 +234,20 @@ class LaTeXOutputter < BasicOutputter
         heading 
       when '+'
         if @list_beginning == true
+          reset_context
           puts "\\begin{itemize}"
           @list_beginning = false
         end
         list
         @context = Context::LIST
       else 
+        if @context == Context::LIST
+          puts @line
+          next
+        end
         if @para_beginning == true
+          reset_context
+          puts "\\\\"
           @para_beginning = false
         end          
         paragraph
